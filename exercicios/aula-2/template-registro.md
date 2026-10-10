@@ -1,25 +1,28 @@
 # Registro individual — AV1.2
 
-> **Como usar:** copie este modelo e substitua os espaços em branco pelas suas respostas. Consulte o [passo a passo da aula](README.md) e o [guia com exemplo de evidência](../README.md). Remova esta orientação da entrega; mantenha suas respostas e evidências em até uma página.
-
-**Limite: uma página.** Estudante: Caroline Lima — Data: 02/10/2026
-**Critérios antes da análise:** como conferir a classificação por R1: impacto + urgencia = escore. A partir do escore é possível classificar o chamado entre alta (>=5), média (>3 <5) ou baixa (<5); o que seria necessário para sustentar uma afirmação sobre outras entradas ou repetições: é necessário verificar várias combinações dos pares possíveis e demonstrar que múltiplas execuções para cada par retornam um resultado semelhante.
+**Limite: uma página.** Estudante: Caroline Lima — Data: 10/10/2026
+**Critérios antes da análise:** como conferir a classificação por R1: somar impacto e urgência e comparar o resultado com as faixas (>= 5 alta, 3 a 4 media, < 3 baixa); o que seria necessário para sustentar uma afirmação sobre outras entradas ou repetições: várias execuções reais, registradas, com entradas diferentes e o esperado calculado por R1 em cada uma.
 
 | Entrada de A (impacto, urgência) | Cálculo e esperado por R1 | Trecho da resposta A | Conclusão por inspeção |
 |---|---|---|---|
-| (2, 3) | 2+3 = 5, alta | O enunciado A diz que basta considerar impacto, nesse caso impacto 2 = media| R1 prevê alta e a resposta A diz media, ou seja, não coincidem |
-| (3, 1) | 3+1 = 4, media | O enunciado A diz que basta considerar impacto, nesse caso impacto 3 = alta | R1 prevê media e a resposta A diz alta, ou seja, não coincidem |
+| (2, 3) | 2 + 3 = 5; R1 dá `alta`. | "(impacto=2, urgencia=3) é media" | Não coincide. R1 pede `alta` e A disse `media`. |
+| (3, 1) | 3 + 1 = 4; R1 dá `media`. | "(impacto=3, urgencia=1) é alta" | Não coincide. R1 pede `media` e A disse `alta`. |
 
-**B — trecho analisado:** As três saídas foram ‘alta’. Isso prova que o modelo é determinístico e sempre entrega a classificação correta, inclusive em outros chamados.
-**O que posso concluir sobre o par citado em B:** o contrato diz 2+3 = 5, classificado como alta, logo, o par citado em B realmente corresponde a alta. No entanto, a execução individual prova que o modelo é determinístico apenas dentro do conjunto testado.
-**Afirmação geral de B: o que falta para sustentá-la:** Pode-se afirmar que o modelo é determinístico a partir das múltiplas execuções gerando um mesmo resultado. Falta repetir com outros pares e até mesmo aumentar o número de execuções. 
-**Contraexemplo ou condição não coberta:** Cenários diferentes que não foram testados, como por exemplo casos de fronteira, (1, 2) dá escore 3 que deveria ser média assim como (2, 2) que dá escore 4 e também é média.
+**B — trecho analisado:** "As três saídas foram 'alta'. Isso prova que o modelo é determinístico e sempre entrega a classificação correta, inclusive em outros chamados."
 
-**Decisão A + motivo:** Rejeitar. A resposta usa só o impacto e ignora a urgência, o que contradiz R1, que manda somar os dois. Os dois pares conferidos dão resultado diferente do esperado: (2,3) deveria ser alta e A disse media; (3,1) deveria ser media e A disse alta. A regra proposta está errada, então não dá para aproveitar nem parte dela.
-**Decisão B + motivo:** Aceitar parcialmente. A classificação alta para (2,3) está correta, porque 2+3=5 e R1 diz que escore ≥ 5 é alta. Já a afirmação geral fica rejeitada: três repetições de um único par não provam que o modelo é determinístico e não dizem nada sobre outros chamados. Além disso, as saídas fazem parte da narrativa simulada e não foram observadas por mim.
-**Alternativa de verificação e condição que mudaria uma decisão:** comparar as respostas com R1 nas 9 combinações possíveis de impacto e urgência, incluindo as fronteiras.
+**O que posso concluir sobre o par citado em B:** Para (2, 3), 2 + 3 = 5 e R1 dá `alta`, então a saída citada está certa para esse par.
 
-**Origem dos dados e como fiz a análise:** respostas didáticas simuladas; cálculos/inspeções próprios: soma manual de impacto+urgencia para comparação com as faixas estabelecidas em R1, além da leitura dos trechos de A e B; execução real: não realizada. Tokens/custo/latência/configuração: não informados.
-**IA na produção do registro:** não utilizada / ferramenta-modelo visível: Claude Code (Sonnet 5.5); tarefa/contexto: como contexto foi utilizado o README.md da av1.2 junto com o prompt para que a ferramente resumisse e explicasse cada item a ser preenchido nesse template; trecho aproveitado e verificação própria: nenhum trecho foi produzido diretamente pela ferramenta.
+**Afirmação geral de B: o que falta para sustentá-la:** B generaliza a partir de uma única entrada repetida três vezes. Faltam outras entradas, incluindo as faixas `media` e `baixa`, e saídas realmente observadas. Repetir o mesmo resultado também não prova que ele é correto em todos os casos.
+
+**Contraexemplo ou condição não coberta:** (1, 1) deveria dar `baixa` e (2, 1) deveria dar `media`. B não testou nenhum dos dois. Isso é só uma proposta de teste, não foi executado.
+
+**Decisão A + motivo:** Rejeitar. Os dois pares estão errados em relação a R1, porque A usa só o impacto e ignora a urgência.
+
+**Decisão B + motivo:** Aceitar parcialmente. O par (2, 3) está certo, mas "prova" e "sempre" não têm base em uma entrada só.
+
+**Alternativa de verificação e condição que mudaria uma decisão:** Rodar entradas de todas as faixas, como (1, 1), (2, 1), (2, 2) e (3, 3), com o esperado calculado antes por R1 e depois comparado. Eu reveria a decisão sobre B se houvesse execuções registradas que cobrissem as três faixas e batessem com R1.
+
+**Origem dos dados e como fiz a análise:** respostas didáticas simuladas; cálculos/inspeções próprios: soma manual e comparação com R1; execução real: não realizada. Tokens/custo/latência/configuração: não informados.
+**IA na produção do registro:** ferramenta-modelo visível: Claude Code, modelo Claude Sonnet 5.5; tarefa/contexto: ler o guia da aula 4 e refinar as respostas presentes neste template de acordo com o material de apoio; trecho aproveitado e verificação própria: verifiquei que os valores calculados e as respostas originais foram apenas refinados mas não tirados de contexto.
 
 **Revisão:** [x] critérios; [x] dois pares; [x] análise de B; [x] decisões/limites; [x] uma página.
