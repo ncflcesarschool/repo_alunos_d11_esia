@@ -1,8 +1,6 @@
 # Registro individual — AV1.4
 
-> **Como usar:** copie este modelo e substitua os espaços em branco pelas suas respostas. Consulte o [passo a passo da aula](README.md) e o [guia com exemplo de evidência](../README.md). Remova esta orientação da entrega; mantenha suas respostas e evidências em até uma página.
-
-**Limite: uma página.** Estudante: ___ — Data: ___
+**Limite: uma página.** Estudante: Caroline Lima — Data: 10/10/2026
 **Critério de aceite por R2:** ___
 
 | Entrada | IDs esperados por R2 | IDs do candidato | Status: inferido/observado | Mecanismo/trecho essencial |
