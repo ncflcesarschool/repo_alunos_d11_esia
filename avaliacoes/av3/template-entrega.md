@@ -1,56 +1,68 @@
 # Entrega individual — AV3
 
-Estudante: ___ · Data: ___ · Caso/recorte: ___
+Estudante: Caroline Lima · Data: 12/10/2026 · Caso/recorte: Fila Clara — assistência de IA à manutenção, variante M1–M6 de AV1.6 (responsável e revisão definidos, zero execução com usuários) com as condições de governança de AV1.5 (uso externo e dados não confirmados)
 **Limites:** parecer até três páginas; evidências/referências até duas páginas. [Enunciado](README.md).
 
 ## Parecer
 
-**1. Recomendação e problema.** Recomendo ___ para a tarefa ___, cujo beneficiário é ___ e resultado esperado é ___. As restrições relevantes são ___.
+**1. Recomendação e problema.** Recomendo **adoção condicionada** para a tarefa **propor testes (e rascunho de documentação) das regras R1–R4 de Fila Clara**, cujo beneficiário é a equipe de manutenção e, indiretamente, a gestora que precisa confiar nos testes e no texto e resultado esperado é propostas de teste e texto que cheguem à revisão já próximas do contrato, sem aumentar o esforço total de verificação. As restrições relevantes são: só dados sintéticos (AV1.5 não confirmou ferramenta autorizada, retenção nem política de dados); entradas válidas e controladas (`caso/regras.md`); nenhuma saída entra no código ou na documentação sem aceite humano; não há execução com usuários (M5), então nenhum ganho está medido.
 
 | Alternativa | Processo e recursos | Benefício esperado / pressuposto | Limite, consequência do erro e esforço de verificação |
 |---|---|---|---|
-| A — sem IA | | | |
-| B — outra alternativa | | | |
+| A — sem IA | A manutenção lê R1–R4, escreve testes e documentação à mão e revisa entre pares. Recursos: contrato, `caso/fila_clara.py`, suíte de nove verificações. | Controle total sobre o conteúdo e nenhum dado sai da organização. Pressuposto: há tempo da equipe para escrever tudo. | Mais trabalho de redação e risco de lacunas de cobertura por falha humana. Um teste fraco passa sem aviso (como em AV1.4). Verificação: revisão humana, esforço moderado. |
+| B — IA propõe, humano aceita (condicionada) | A IA recebe só a cópia sintética e R1–R4 e propõe testes e rascunho de texto. A manutenção confronta cada proposta com o contrato antes de usar. | Rascunhos mais rápidos e mais casos candidatos. Pressuposto, **não medido**: a revisão custa menos que escrever do zero. | A saída pode ser plausível e errada (E1, E2). Se for aceita sem conferência, o erro entra no teste ou na documentação e passa a parecer validado. Verificação: igual ou maior que em A, porque é preciso conferir tudo contra R1–R4. |
+| C — IA com autonomia total / dados reais | Descartada: contraria AV1.5 (ferramenta e dados não confirmados) e E1/E2. | — | — |
 
-**Minha comparação e razão para a recomendação:** ___
+**Minha comparação e razão para a recomendação:** Sob as mesmas restrições (dados sintéticos, entradas controladas, aceite humano antes de qualquer uso), A e B dependem da mesma revisão contra R1–R4; a diferença está em quem produz o primeiro rascunho. Em A, o custo está na redação e o risco, em lacunas de cobertura. Em B, a redação pode ficar mais barata (pressuposto, **não medido**), mas o esforço de verificação não diminui: cada proposta precisa ser conferida contra o contrato, e E1/E2 mostram que o erro pode vir em forma plausível. A consequência do erro é a mesma nas duas, um teste fraco ou um texto errado que passa a parecer validado; em B, soma-se o risco de aceitar sem conferir. Recomendo B **condicionada** porque o escopo é pequeno e as regras R1–R4 são claras, o que torna a conferência viável, e porque o erro é reversível: nada entra no código ou na documentação antes do aceite. 
 
-**2. Autonomia e responsabilidade.** Etapa/tarefa assistida, se recomendada: ___
-O que permanece sob aceite humano / critério e responsável: ___
-Condição de intervenção, tratamento de exceção e reversibilidade/recusa: ___
+**2. Autonomia e responsabilidade.** Etapa/tarefa assistida, se recomendada: a IA **só sugere** casos de teste e um rascunho de texto para R1–R4, a partir da cópia sintética.
+O que permanece sob aceite humano / critério e responsável: aceitar, ajustar ou rejeitar cada teste e cada trecho de documentação é decisão da **pessoa de manutenção designada (M2)**. Critério de aceite: a proposta bate com R1–R4 em cada regra, e o teste distingue o comportamento correto do errado (não basta passar). A **gestora** decide mudanças de requisito. 
 
-**3. Verificação e contraponto.** Evidência E1 do anexo: ___; critério aplicado: ___; resultado/status: ___; interpretação que sustenta a recomendação: ___.
-Limitação ou evidência contrária E2: ___; efeito na recomendação e condição que a mudaria: ___.
+
+**3. Verificação e contraponto.** Evidência E1 do anexo: **AV1.4 — candidato a `listar_ativos` com `sorted`** (TR-41…TR-44); critério aplicado: **R2** (incluir `aberto` e `em_andamento`, excluir `fechado`, preservar a ordem de entrada); resultado/status: o candidato devolveria [TR-42, TR-44, TR-41] em vez de [TR-41, TR-42, TR-44], **inferido por leitura**; o teste entregue passa porque a entrada já está em ordem decrescente de prioridade; interpretação que sustenta a recomendação: **uma saída plausível, e até um teste verde, não prova a regra**. Por isso o aceite precisa comparar com o contrato e exigir testes que distingam o erro, e é isso que a recomendação condiciona.
+Limitação ou evidência contrária E2: **AV2 — `pode_visualizar_proposta`** (T1–T4, inferido por leitura): confirma o mesmo padrão (a condição de R2 copiada para R3 e repetida na documentação). Mas a limitação é que são **dois artefatos simulados, quatro casos, sem execução, e `em_andamento` não foi coberto**. Efeito na recomendação: E1 e E2 mostram que **há risco** de erro plausível e que a conferência é necessária, mas **não medem a taxa de erro** da IA nem provam que ela erra mais que a equipe (os artefatos foram escritos para a avaliação, não são saídas de modelo real). Condição que mudaria a recomendação: se o próximo passo mostrar muitas propostas rejeitadas ou custo de revisão acima do de A, passo a recomendar A; se mostrar propostas aprovadas com pouca correção e sem incidente, a adoção pode avançar.
 
 **4. Riscos e mecanismos.**
 
 | Risco e consequência no recorte | Mecanismo | Responsável | Evidência e como conferir o controle | Exceção/interrupção |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
+| 1 — Teste ou texto plausível mas errado é aceito, e o erro passa a parecer validado (como em E1/E2) | Cada proposta é confrontada com R1–R4 antes do aceite; o teste precisa usar entrada em que o erro mude o resultado (ex.: ordem de chegada diferente da de prioridade). | Pessoa de manutenção designada (M2) | **Registro da revisão** (data, regra comparada, o que foi corrigido, quem revisou). A gestora confere uma amostra: procura propostas aceitas sem comparação com regra citada. *Hoje existe apenas a evidência E1/E2; o registro é comprovante de um controle futuro.* | Se faltar o registro de uma proposta aceita, ela é retirada até ser revisada. Incidente ou rejeição acima do limite (seção 5) interrompe o uso. |
+| 2 — Dados reais enviados a ferramenta externa não confirmada (identificação de colaborador, informações de acesso) | Enviar somente a cópia sintética; conferir o texto antes do envio para ver se há nome, acesso ou dado real. | Manutenção (envia); segurança (confirma o que pode ser enviado) | **Lista de conferência** com data, o que foi enviado, resultado da conferência e quem fez. Conferir: nenhum item sem registro e nenhum dado real listado. | Qualquer dado real detectado interrompe o uso, acionando a segurança. Exceção só por pedido escrito aprovado e registrado (AV1.5). |
 
-**5. Maturidade e próximo passo.** Objeto e estágio: ___; definição adotada: ___; fatos que o sustentam: ___; estágio rival e motivo da distinção: ___; lacuna: ___.
-Passo proposto — tarefa, participantes, duração, dados e responsável: ___
-Métrica (fórmula/unidade e, se taxa, numerador/denominador): ___
-Coleta e referência de comparação: ___; limite da medida: ___
-Condição proposta de avanço / quem decide: ___
-Condição proposta de interrupção / quem age: ___
+**5. Maturidade e próximo passo.**
+
+**Estágio: protótipo.** Adoto "protótipo" como artefato demonstrável em ambiente controlado; "piloto" exigiria execução no fluxo, com participantes e resultados acompanhados. Fatos: M1 (artefato com três exemplos sintéticos) e M5 (zero execuções com usuários; plano não iniciado). M2 (responsável), M3 (revisão definida) e M4 (duas semanas planejadas) sugerem piloto, mas são preparativos: sem execução (M5), não há piloto.
+
+**Lacuna:** nenhum uso real registrado e condições de uso externo e de dados ainda não confirmadas (AV1.5). A ausência de dono formal do cenário-base **não** se aplica a esta variante.
+
+**Próximo passo (proposto, não executado):** executar o plano de M4. Duas pessoas da manutenção usam a IA por duas semanas para propor testes e documentação de R1–R4, só com dados sintéticos, e cada proposta passa por revisão humana. Responsável: a pessoa designada (M2).
+
+**Métrica:** taxa de aprovação sem correção = propostas aprovadas sem correção ÷ propostas revisadas (cada proposta conta uma vez; %). Em separado, minutos de revisão e correção por proposta aprovada.
+
+**Coleta e comparação:** o revisor registra cada proposta e seu resultado. A referência é a mesma tarefa sem IA (alternativa A), com os mesmos critérios e o mesmo revisor. Limite: amostra pequena, e a taxa não mostra se o teste aprovado detecta o erro; por isso cada teste também é checado pelo critério de E1.
+
+**Avançar** (decide a gestora, com a pessoa responsável): taxa **≥ 70%**, sem incidente e com esforço de revisão não superior ao de A → propor piloto no fluxo real.
+
+**Interromper** (a pessoa responsável para o uso e avisa a gestora): qualquer incidente (dado real enviado ou proposta errada incorporada sem revisão) ou taxa **< 40%**. Entre 40% e 70% o resultado é inconclusivo: repete-se o teste, sem tratá-lo como favorável.
+
+Os limiares de 70% e 40% são propostas e não fazem parte do contrato inicial.
 
 **6. Fundamentação aplicada.** Integre estes argumentos às seções anteriores ou registre-os aqui com remissão explícita:
 
-- **F1:** afirmação da fonte em minhas palavras e localização: ___; decisão do parecer a que se aplica: ___; o que a fonte sustenta: ___; minha inferência sobre o caso: ___; limite/contraponto: ___.
-- **F2:** afirmação da fonte em minhas palavras e localização: ___; decisão do parecer a que se aplica: ___; o que a fonte sustenta: ___; minha inferência sobre o caso: ___; limite/contraponto: ___.
+- **F1 (Fan et al., v4, 2023):** afirmação da fonte em minhas palavras e localização: os autores dizem que a alucinação significa que o artefato gerado pode estar incorreto e ainda assim parecer plausível, e que o LLM pode introduzir defeitos (seção I, p. 1); por isso são necessárias técnicas que descartem soluções incorretas, e o levantamento aponta o papel central de **técnicas híbridas** (engenharia de software tradicional + LLM) para um uso confiável (resumo, p. 1). Na seção V (testes, p. 9), citam que cerca de um quarto dos testes gerados por ChatGPT em um dos estudos era executável, e que combinar LLM com técnicas já existentes de geração de testes deu resultados promissores (seção V.A, p. 10); decisão do parecer a que se aplica: **aceite condicionado e verificação humana** (seções 2 e 4, risco 1); o que a fonte sustenta: a saída de um LLM exige filtro, e o arranjo confiável combina o LLM com práticas tradicionais de verificação; minha inferência sobre o caso: a revisão humana contra R1–R4 e o teste que distingue o erro (entrada em que a ordem de chegada difere da de prioridade) fazem o papel "tradicional" dessa combinação, e E1/E2 são exemplos de artefato plausível e errado em Fila Clara; limite/contraponto: a fonte observa que engenheiros de software têm uma verdade automatizável, a execução do software (seção I, p. 1), e em E1/E2 **nada foi executado**; é um levantamento geral de 2023, não mede a ferramenta nem o recorte de Fila Clara, e não garante que um modelo atual erre dessa forma.
+- **F2 (Hou et al., v6, 2024):** afirmação da fonte em minhas palavras e localização: a revisão sistemática analisou 395 artigos (jan. 2017 a jan. 2024) e afirma que a compreensão da aplicação, dos efeitos e das possíveis limitações dos LLMs em engenharia de software **ainda está em estágio inicial** (resumo, p. 1). Na seção 8.1.3 (pp. 42–43), os autores dizem que as métricas usuais (acurácia, recall, F1) podem não capturar todos os efeitos de um modelo: um modelo pode ir bem na métrica e falhar em certos tipos de entrada ou situações; e, na 8.1.4 (p. 43), que a falta de interpretabilidade e de confiança leva desenvolvedores a hesitar em confiar na saída gerada; decisão do parecer a que se aplica: **não assumir ganhos e medir antes de avançar** (seção 1, comparação; seção 5, métrica e condições); o que a fonte sustenta: a evidência geral sobre efeitos e limites ainda é incipiente, e uma única métrica pode esconder falhas; minha inferência sobre o caso: por isso trato o benefício de B como pressuposto, meço esforço de revisão além da taxa de aprovação, e o critério de E1 (o teste detecta o erro?) entra como segunda medida; deixo o avanço sujeito à medição contra a alternativa A; limite/contraponto: a fonte é uma revisão geral, não avalia testes e documentação de um sistema pequeno e fictício, e não permite concluir que a IA ajude ou atrapalhe aqui.
 
 ## Anexo — evidências, referências e procedência
 
-**E1 — origem/atividade, arquivo ou identificação e trecho exato:** ___
-Entrada ou fato / esperado ou critério / resultado e método / status observado, inferido ou simulado: ___
-**E2 — origem e trecho ou limitação/contraponto da evidência:** ___
-**Outros trechos essenciais de apoio às decisões, se necessários:** ___
+**E1 — origem/atividade, arquivo ou identificação e trecho exato:** AV1.4, `exercicios/aula-4/template-registro.md`: `sorted(ativos, key=impacto + urgencia, reverse=True)`; "o filtro por estado está certo, mas o `sorted` reordena por prioridade (6, 4, 2)". Trecho do teste: entrada TR-42, TR-44, TR-41, TR-43, comparação com ["TR-42", "TR-44", "TR-41"].
+Entrada ou fato / esperado ou critério / resultado e método / status observado, inferido ou simulado: entrada de revisão TR-41, TR-42, TR-43, TR-44 / R2: [TR-41, TR-42, TR-44] (TR-43 fechado excluído; ordem de entrada preservada) / candidato devolve [TR-42, TR-44, TR-41]; o teste entregue passa porque a entrada já está em ordem de prioridade / **candidato e teste simulados; retorno inferido por leitura; nada executado.**
+**E2 — origem e trecho ou limitação/contraponto da evidência:** AV2, `avaliacoes/av2/template-entrega.md`, matriz T1–T4 e E2/E3: `chamado["departamento"] == departamento and chamado["estado"] != "fechado"`; em T2 (Oficina, fechado) R3 espera True e o candidato devolve False; a documentação repete "chamados fechados ficam indisponíveis". Status: inferido por leitura. **Limitação:** só quatro casos, um solicitante, artefatos escritos para a avaliação (não saída de modelo real), `em_andamento` não coberto, nada executado. Não permite estimar taxa de erro.
+**Outros trechos essenciais de apoio às decisões, se necessários:** (a) AV1.5, `exercicios/aula-5/template-registro.md`: "Não colar o chamado e o log reais no assistente externo por enquanto… Não se sabe se existe ferramenta autorizada" (base dos riscos 1 e 2 e da exceção); (b) AV1.6, `exercicios/aula-6/template-registro.md`: M1 "Há um artefato demonstrável com três exemplos sintéticos" e M5 "zero execuções com usuários; o plano ainda não começou" (base do estágio); (c) `caso/regras.md`, R2 e R3 (critérios).
 
-**F1 — referência de L0:** autores: ___; título: ___; ano/versão: ___; seção/página consultada: ___; referência/link identificável: ___.
-**F2 — referência de L0:** autores: ___; título: ___; ano/versão: ___; seção/página consultada: ___; referência/link identificável: ___.
+**F1 — referência de L0:** autores: Angela Fan, Beliz Gokkaya, Mark Harman, Mitya Lyubarskiy, Shubho Sengupta, Shin Yoo, Jie M. Zhang; título: *Large Language Models for Software Engineering: Survey and Open Problems*; ano/versão: 2023, arXiv v4 (11/11/2023); seção/página consultada: resumo e seção I (p. 1), seção V (pp. 9–10); referência/link identificável: arXiv:2310.03533v4 [cs.SE], https://arxiv.org/abs/2310.03533.
+**F2 — referência de L0:** autores: Xinyi Hou, Yanjie Zhao, Yue Liu, Zhou Yang, Kailong Wang, Li Li, Xiapu Luo, David Lo, John Grundy, Haoyu Wang; título: *Large Language Models for Software Engineering: A Systematic Literature Review*; ano/versão: 2024, arXiv v6 (10/04/2024), publicado em ACM Trans. Softw. Eng. Methodol.; seção/página consultada: resumo (p. 1), seções 8.1.3 e 8.1.4 (pp. 42–43); referência/link identificável: arXiv:2308.10620v6 [cs.SE], https://arxiv.org/abs/2308.10620.
 
-**Procedência:** materiais simulados reaproveitados: ___; observações próprias: ___; inferências: ___; passos e metas propostos: ___.
-**IA:** não utilizada / ferramenta-modelo visível: ___; data: ___; tarefa/contexto: ___; trecho aproveitado: ___; verificação e intervenção próprias: ___. Use “não informado” para metadados indisponíveis.
+**Procedência:** materiais simulados reaproveitados: contrato R1–R4 e dados de `caso/`, candidato e teste de AV1.4, candidato e documentação de AV2, pedido de AV1.5 e fatos M1–M6 de AV1.6; observações próprias: leitura do código e dos testes, confronto com R2/R3, retornos inferidos; inferências: que o padrão de E1/E2 justifica o aceite condicionado, e a leitura de F1/F2 sobre o caso; passos e metas propostos: o plano de duas semanas, a métrica, os limiares de 70% e 40% e os responsáveis, **todos ainda não executados**.
+**IA:** ferramenta-modelo visível: Claude Code, modelo Claude Sonnet 5.5; data: 12/10/2026; tarefa/contexto: ler o guia da aula 6, o enunciado da AV3 e o estudo autônomo, e responder o template a partir dos meus registros de AV1.4–AV1.6 e AV2; trecho aproveitado: redação e organização dos campos; verificação e intervenção próprias: conferir fatos e trechos contra os meus registros e o contrato, e conferir as afirmações de F1/F2 contra os textos e o meu fichamento de L0, incluindo a localização por seção. Numa segunda rodada, utilizei o NotebookLM para me auxiliar na leitura de apoio e elaborar os resumos e referências com seções e páginas confirmadas nesses textos.
 
-**Checklist:** [ ] alternativas; [ ] autonomia; [ ] evidência/contraponto; [ ] dois riscos; [ ] maturidade/métrica; [ ] duas fontes aplicadas; [ ] procedência; [ ] 3+2 páginas.
+**Checklist:** [x] alternativas; [x] autonomia; [x] evidência/contraponto; [x] dois riscos; [x] maturidade/métrica; [x] duas fontes aplicadas; [x] procedência; [x] 3+2 páginas.
